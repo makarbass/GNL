@@ -6,12 +6,14 @@ int get_next_line(int fd, char **line)
 	int bytes;
 	int k;
 	char *p_n;
+	static char *ost;
 
 	k = 1;
 	p_n = 0;
 	*line  = "\0";
-	//bytes = read(fd, BUF, 10);
-	//printf("READ : %d\n",bytes);
+
+	if (ost)
+		*line = ft_strjoin(*line, ost);
 	while (k==1 && (bytes = read(fd, BUF, 10)))
 	{
 		BUF[bytes] = '\0';
@@ -19,6 +21,8 @@ int get_next_line(int fd, char **line)
 		{
 			*p_n = '\0';
 			k = 0;
+			p_n++;
+			ost = ft_strdup(p_n);
 		}
 		*line = ft_strjoin(*line, BUF);
 	}
@@ -34,7 +38,8 @@ int main(void)
 	fd = open("text.txt",O_RDONLY);
 	get_next_line(fd, &line);
 	printf("%s\n", line);
-	printf("\n");
+	get_next_line(fd, &line);
+	printf("%s\n", line);
 	get_next_line(fd, &line);
 	printf("%s\n", line);
 	return(0);
