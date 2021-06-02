@@ -44,7 +44,7 @@ int get_next_line(int fd, char **line)
 		}
 		*line = ft_strjoin(*line, buf);
 	}
-	return (bytes || ft_strlen(ost)) ? 1 : 0;
+	return (bytes || ft_strlen(*line)) ? 1 : 0;
 }
 
 int main(void)
