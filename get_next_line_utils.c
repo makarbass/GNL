@@ -76,21 +76,16 @@ char	*ft_strchr(const char *str, int ch)
 	return (NULL);
 }
 
-void	*ft_memccpy (void *destination, const void *source, int c, size_t n)
+char	*ft_strcpy(char *dst, const char *src)
 {
-	unsigned char	*d;
-	unsigned char	*s;
-	size_t			i;
+	int i;
 
-	d = (unsigned char *)destination;
-	s = (unsigned char *)source;
 	i = 0;
-	while (i < n)
+	while (src[i])
 	{
-		d[i] = s[i];
+		dst[i] = src[i];
 		i++;
-		if (s[i - 1] == (unsigned char)c)
-			return (&d[i]);
 	}
-	return ((void *) 0);
+	dst[i] = '\0';
+	return (dst);
 }
