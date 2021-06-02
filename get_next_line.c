@@ -29,6 +29,8 @@ int get_next_line(int fd, char **line)
 	char *p_n;
 	static char *ost;
 
+	if (!fd || !line)
+		return(-1);
 	*line = "\0";
 	p_n = check_ost(ost, line);
 	while (!p_n  && (bytes = read(fd, buf, BUFFER_SIZE)))
@@ -42,7 +44,7 @@ int get_next_line(int fd, char **line)
 		}
 		*line = ft_strjoin(*line, buf);
 	}
-	return (0);
+	return (bytes || ft_strlen(ost)) ? 1 : 0;
 }
 
 int main(void)
@@ -51,15 +53,7 @@ int main(void)
 	char *line;
 
 	fd = open("text.txt",O_RDONLY);
-	get_next_line(fd, &line);
-	printf("%s\n\n", line);
-	get_next_line(fd, &line);
-	printf("%s\n\n", line);
-	get_next_line(fd, &line);
-	printf("%s\n\n", line);
-		get_next_line(fd, &line);
-	printf("%s\n\n", line);
-		get_next_line(fd, &line);
-	printf("%s\n\n", line);
+	while (get_next_line(fd, &line))
+		printf("%s\n\n", line);
 	return(0);
 }
