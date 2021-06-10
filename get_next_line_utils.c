@@ -1,91 +1,102 @@
 #include "get_next_line.h"
 
-int	ft_strlen(const char *str)
+int	ft_strlen(char *str)
 {
 	int	i;
 
 	i = 0;
+	if(!str)
+		return(0);
 	while (str[i] != '\0')
 		i++;
 	return (i);
 }
 
-char	*ft_strdup(const char *s1)
-{
-	char	*ptr;
-	int		len;
-
-	len = ft_strlen(s1) + 1;
-	ptr = (char *)malloc(len);
-	if (!ptr)
-		return (NULL);
-	ft_memcpy(ptr, s1, (size_t)len);
-	return (ptr);
-}
-
-void *ft_memcpy (void *dest, const void *src, size_t len)
-{
-	char *d = dest;
-	const char *s = src;
-	while (len--)
-		*d++ = *s++;
-	return (dest);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	char	*str;
-	char	*res;
-	size_t	len;
-
-	if (s1 == NULL || s2 == NULL)
-		return (NULL);
-	len = ft_strlen(s1) + ft_strlen(s2);
-	if ((str = (char *)malloc(len + 1)) == NULL)
-		return (NULL);
-	res = str;
-	while (*s1)
-	{
-		*str = *s1;
-		str++;
-		s1++;
-	}
-	while (*s2)
-	{
-		*str = *s2;
-		str++;
-		s2++;
-	}
-	*str = '\0';
-	return (res);
-}
-
-char	*ft_strchr(const char *str, int ch)
-{
-	int	i;
-
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == (char)ch)
-			return ((char *)str + i);
-		i++;
-	}
-	if ((char)ch == str[i])
-		return ((char *)str + i);
-	return (NULL);
-}
-
-char	*ft_strcpy(char *dst, const char *src)
+int ft_strendl(char *str)
 {
 	int i;
 
 	i = 0;
-	while (src[i])
+	while (str[i] != '\0')
 	{
-		dst[i] = src[i];
+		if (str[i] == '\n')
+			return(1);
 		i++;
 	}
-	dst[i] = '\0';
-	return (dst);
+	return (0);
+}
+
+char	*ft_strjoin(char *s1, char *s2)
+{
+	int		i;
+	int		j;
+	char	*str;
+	int len;
+
+	len = ft_strlen(s1) + ft_strlen(s2) + 1;
+	if (!(str = malloc(sizeof(char) * len)))
+		return(NULL);
+	i = 0;
+	str[len - 1] = '\0';
+	if (s1)
+		while (s1[i] != '\0')
+		{
+			str[i] = s1[i];
+			i++;
+		}
+	j = 0;
+	if (s2)
+		while (s2[j] != '\0')
+			str[i++] = s2[j++];
+	free(s1);
+	return (str);
+}
+
+char    *ft_getline(char *mem)
+{
+        char *tmp;
+        int     i;
+
+        i = 0;
+        while (mem && mem[i] != '\0' && mem[i] != '\n')
+        	i++;
+        if (!(tmp = malloc(sizeof(char) * (i + 1))))
+        	return(NULL);
+        i = 0;
+        while (mem && mem[i] != '\0' && mem[i] != '\n')
+        {
+                tmp[i] = mem[i];
+                i++;
+        }
+        tmp[i] = '\0';
+        return (tmp);
+}
+
+char	*ft_clearmem(char *mem)
+{
+	char	*tmp;
+	int len;
+	int i;
+	int j;
+
+	i = 0;
+	if (!mem)
+		return(NULL);
+	while (mem[i] != '\0' && mem[i] != '\n')
+		i++;
+	if (mem[i] == '\0')
+	{
+		free(mem);
+		return (NULL);
+	}
+	len = ft_strlen(mem) - i;
+	if (!(tmp = malloc(sizeof(char) * (len + 1))))
+		return (NULL);
+	i++;
+	j = 0;
+	while (mem[i] != '\0')
+		tmp[j++] = mem[i++];
+	tmp[j] = '\0';
+	free(mem);
+	return	(tmp);
 }

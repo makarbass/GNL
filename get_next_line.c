@@ -1,59 +1,29 @@
 #include "get_next_line.h"
 
-char *check_ost(char *ost, char **line)
+int     get_next_line(int fd, char **line)
 {
-	char *p_n;
+        char            *buf;
+        static char     *mem;
+        int             get;
 
-	p_n = NULL;
-	if (ost)
-	{
-		if ((p_n = ft_strchr(ost, '\n')))
-		{
-			*p_n = '\0';
-			*line = ft_strdup(ost);
-			ft_strcpy(ost, ++p_n);
-		}
-		else
-		{
-			*line = ft_strjoin(*line,ost);
-			*ost = '\0';
-		}
-	}
-	return (p_n);
-}
-
-int get_next_line(int fd, char **line)
-{
-	char buf[BUFFER_SIZE + 1];
-	int bytes;
-	char *p_n;
-	static char *ost;
-
-	if (!fd || !line)
-		return(-1);
-	*line = "\0";
-	p_n = check_ost(ost, line);
-	while (!p_n  && (bytes = read(fd, buf, BUFFER_SIZE)))
-	{
-		buf[bytes] = '\0';
-		if ((p_n = ft_strchr(buf,'\n')))
-		{
-			*p_n = '\0';
-			p_n++;
-			ost = ft_strdup(p_n);
-		}
-		*line = ft_strjoin(*line, buf);
-	}
-	return (bytes || ft_strlen(*line)) ? 1 : 0;
-}
-
-int main(void)
-{
-	int fd;
-	char *line;
-
-	fd = open("text.txt",O_RDONLY);
-	while (get_next_line(fd, &line))
-		printf("%s\n\n", line);
-	return(0);
-}
+        if (fd < 0 || line == NULL || BUFFER_SIZE <= 0) 
+                return(-1);
+        if (!(buf = malloc(sizeof(char) * (BUFFER_SIZE + 1))))
+                return(-1);
+        get = 1;
+        while ((get = read(fd, buf, BUFFER_SIZE)) > 0)
+        {
+                buf[get] = '\0';
+                mem = ft_strjoin(mem, buf);
+                if (ft_strendl(mem))
+                        break;
+        }
+        free(buf);
+        if (get < 0)
+                return (-1);
+        *line = ft_getline(mem);
+        mem = ft_clearmem(mem);
+        if (get == 0 && !mem)
+                return(0);
+        return (1);
+}  
